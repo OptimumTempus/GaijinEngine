@@ -1,0 +1,169 @@
+	
+	//Utils::LoadModel testff("Models/TestWithNorms.obj");
+	//Utils::LoadModel testfff("Models/TestSphereCube.Obj");
+
+
+
+	//GLuint core_program;
+	//if (!loadProgram.loadShaders(core_program))
+	//{
+	//	glfwTerminate();
+	//}
+
+
+	
+	//Utils::LoadTexture textureOne("Resources/pusheen.png");
+
+
+	//Texture 2
+	//Utils::LoadTexture textureTwo("Resources/ahego.png");
+
+	
+	
+	
+	while (!window.w_closed())
+	{
+
+		//UPDATE INPUT ---
+		window.clear(0.0f, 0.0f, 0.0f, 1.0f);
+
+		//UPDATE ---
+		if (window.w_isKeyPressed(GLFW_KEY_ESCAPE))
+		{
+			break;
+		}
+
+		if (window.w_isKeyPressed(GLFW_KEY_W))
+		{
+			//camZ += .007f;
+			retard.move(glm::vec3(0, 0, .007));
+		}
+
+		if (window.w_isKeyPressed(GLFW_KEY_S))
+		{
+			retard.move(glm::vec3(0, 0, -.007));
+		}
+
+		if (window.w_isKeyPressed(GLFW_KEY_UP))
+		{
+			retard.move(glm::vec3(0, .007, 0));
+		}
+
+		if (window.w_isKeyPressed(GLFW_KEY_DOWN))
+		{
+			//if (camY <= 0)
+			retard.move(glm::vec3(0, -.007, 0));
+		}
+
+		if (window.w_isKeyPressed(GLFW_KEY_D))
+		{
+			retard.rotate(glm::vec3(0, -.07, 0));
+		}
+
+		if (window.w_isKeyPressed(GLFW_KEY_A))
+		{
+			retard.rotate(glm::vec3(0, .07, 0));
+		}
+
+		if (window.w_isKeyPressed(GLFW_KEY_RIGHT))
+		{
+			retard.rotate(glm::vec3(-.1, 0, 0));
+		}
+
+		if (window.w_isKeyPressed(GLFW_KEY_LEFT))
+		{
+			retard.rotate(glm::vec3(.1, 0, 0));
+
+		}
+
+
+		window.w_getMousePosition(x, y);
+
+
+
+
+		//Use Program
+
+		core_program.use();
+
+		core_program.set1i(texture0.getTextureUnit(),"texture0");
+		//core_program.set1i(texture1.getTextureUnit(),"texture1");
+		material0.sendToShader(core_program);
+
+		//glUniform1i(glGetUniformLocation(core_program, "texture0"),0);
+		//glUniform1i(glGetUniformLocation(core_program, "texture1"), 1);
+
+
+		/*glm::mat4 ModelMatrix(1.f);
+		ModelMatrix = glm::translate(ModelMatrix, glm::vec3(camX, camY, camZ));
+		ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(1.f, 0.f, 0.f));
+		ModelMatrix = glm::rotate(ModelMatrix, glm::radians(rot), glm::vec3(0.f, 1.f, 0.f));
+		ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 0.f, 1.f));
+		ModelMatrix = glm::scale(ModelMatrix, glm::vec3(testScale));*/
+
+		//Move rotate and scale
+		glfwGetFramebufferSize(window.getWindow(), &framebufferWidth, &framebufferHeight);
+
+
+		//std::cout << "X: " << x << " Y: " << y << std::endl;
+		glm::mat4 ProjectionMatrix(1.f);
+		ProjectionMatrix = glm::perspective(glm::radians(fov), static_cast<float>(framebufferWidth) / static_cast<float>(framebufferHeight), nearPlane, farPlane);
+
+		glm::vec3 lightPos0(0.f, 0.f, 2.f);
+
+		core_program.setMat4fv(ModelMatrix, "ModelMatrix", GL_FALSE);
+		core_program.setMat4fv(ViewMatrix, "ViewMatrix", GL_FALSE);
+		core_program.setMat4fv(ProjectionMatrix, "ProjectionMatrix", GL_FALSE);
+
+		core_program.setVec3f(lightPos0, "lightPos0");
+		core_program.setVec3f(camPosition, "cameraPos");
+
+
+
+		//glUniformMatrix4fv(glGetUniformLocation(core_program, "ModelMatrix"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
+		//glUniformMatrix4fv(glGetUniformLocation(core_program, "ViewMatrix"), 1, GL_FALSE, glm::value_ptr(ViewMatrix));
+		//glUniformMatrix4fv(glGetUniformLocation(core_program, "ProjectionMatrix"), 1, GL_FALSE, glm::value_ptr(ProjectionMatrix));
+
+		//glUniform3fv(glGetUniformLocation(core_program, "lightPos0"), 1, glm::value_ptr(lightPos0));
+		//glUniform3fv(glGetUniformLocation(core_program, "cameraPos"), 1, glm::value_ptr(camPosition));
+
+
+		//std::cout << glm::to_string(ModelMatrix) << s9999999999999999999699td::endl;
+
+		//system("pause");
+		texture0.bind();
+		texture1.bind();
+
+		/*glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textureOne.getTex());*/
+		/*glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, textureTwo.getTex());*/
+
+		core_program.use();
+		//testff.bindVertexArray();
+		//testfff.bindVertexArray();
+
+		//DRAW ---
+		//CLEAR
+
+		//DRAW
+		//glDrawArrays(GL_TRIANGLES, 0, nrOfVertices);
+
+		//glDrawElements(GL_TRIANGLES, testff.returnIndices() , GL_UNSIGNED_INT, 0);
+		//glDrawElements(GL_TRIANGLES, testfff.returnIndices(), GL_UNSIGNED_INT, 0);
+		retard.render(&core_program);
+		//END DRAW
+
+
+		
+
+		
+		//glBindVertexArray(0);
+		//glUseProgram(0);
+		/*glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, 0);*/
+
+		window.w_update();
+	}
